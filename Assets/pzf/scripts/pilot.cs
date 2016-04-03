@@ -2,12 +2,8 @@
 using System.Collections;
 
 public class pilot : MonoBehaviour {
-
-    void fitCameraWidth()
-    {
+    void Start () {
         SpriteRenderer sr = (SpriteRenderer)GetComponent("Renderer");
-        if (sr == null)
-            return;
 
         // Get stuff
         double width = sr.sprite.bounds.size.x;
@@ -17,14 +13,4 @@ public class pilot : MonoBehaviour {
         // Resize
         transform.localScale = new Vector2(1, 1) * (float)(worldScreenWidth / width);
     }
-
-    // Use this for initialization
-    void Start () {
-        fitCameraWidth();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }
