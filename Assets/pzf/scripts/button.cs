@@ -4,7 +4,9 @@ using System.Collections;
 public class button : MonoBehaviour {
 
     static string lang_prefix = "en";
-    static string prev_lang_prefix = "en";
+
+    string prev_lang_prefix = "en";
+    AudioClip clip = null;
 
     // Use this for initialization
     void Start () {
@@ -13,16 +15,32 @@ public class button : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.touchCount > 0) {
+        if (Input.touchCount > 0)
+        {
             Vector3 wp = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
-            if (GetComponent<Collider2D>().OverlapPoint(wp)) {
+            if (GetComponent<CircleCollider2D>().OverlapPoint(wp))
+            {
                 var source = GetComponent<AudioSource>();
-                source.clip.name = source.clip.name.Replace(prev_lang_prefix, lang_prefix);
-                source.Play();
-                if (gameObject.name.StartsWith("lang")) {
-                    prev_lang_prefix = lang_prefix;
-                    lang_prefix = gameObject.name.Split('_')[1];
+                var tag = gameObject.name.Split('_')[1];
+                if (gameObject.name.StartsWith("lang"))
+                {
+                    lang_prefix = tag;
                 }
+                else
+                {
+                    if (prev_lang_prefix != lang_prefix)
+                    {
+                        prev_lang_prefix = lang_prefix;
+                        if (!clip)
+                        {
+                            clip = Resources.Load("sounds/" + lang_prefix + "_" + tag) as AudioClip;
+                        }
+                        var tmp = source.clip;
+                        source.clip = clip;
+                        clip = tmp;
+                    }
+                }
+                source.Play();
             }
         }
     }
